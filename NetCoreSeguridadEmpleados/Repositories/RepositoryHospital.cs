@@ -18,21 +18,19 @@ namespace NetCoreSeguridadEmpleados.Repositories
             return await this.context.Empleados.ToListAsync();
         }
 
-        public async Task<Empleado> FindEmpleadoAsync(int idempleado)
+        public async Task<Empleado> FindEmpleadoAsync(int idEmpleado)
         {
-            return await this.context.Empleados.FirstOrDefaultAsync(e => e.IdEmpleado == idempleado);
+            return await this.context.Empleados.FirstOrDefaultAsync(x => x.IdEmpleado == idEmpleado);
         }
 
-        public async Task<List<Empleado>> GetEmpleadosDepartamentoAsync(int iddepart)
+        public async Task<List<Empleado>> GetEmpleadosDepartamentoAsync(int idDepartamento)
         {
-            return await this.context.Empleados
-                .Where(e => e.Departamento == iddepart)
-                .ToListAsync();
+            return await this.context.Empleados.Where(x => x.Departamento == idDepartamento).ToListAsync();
         }
 
-        public async Task UpdateSalarioEmpleadosDepartamentoAsync (int iddepart, int incremento)
+        public async Task UpdateSalarioEmpleadosAsync(int idDepartamento, int incremento)
         {
-            List<Empleado> empleados = await this.GetEmpleadosDepartamentoAsync(iddepart);
+            List<Empleado> empleados = await this.GetEmpleadosDepartamentoAsync(idDepartamento);
             foreach (Empleado emp in empleados)
             {
                 emp.Salario += incremento;
@@ -40,5 +38,10 @@ namespace NetCoreSeguridadEmpleados.Repositories
             await this.context.SaveChangesAsync();
         }
 
+        public async Task<Empleado> LogInEmpleadoAsync(string apellido, int idEmpleado)
+        {
+            Empleado empleado = await this.context.Empleados.Where(z => z.Apellido == apellido && z.IdEmpleado == idEmpleado).FirstOrDefaultAsync();
+            return empleado;
+        }
     }
 }

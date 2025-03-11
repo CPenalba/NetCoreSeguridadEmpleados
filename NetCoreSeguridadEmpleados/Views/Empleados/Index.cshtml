@@ -1,4 +1,4 @@
-﻿@model IEnumerable<NetCoreSeguridadEmpleados.Models.Empleado>
+﻿@model List<Empleado>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,25 +6,15 @@
 
 <h1>Seguridad empleados</h1>
 
-<table class="table">
+<table class="table table-bordered table-info">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdEmpleado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Apellido)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Oficio)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Salario)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Departamento)
-            </th>
-            <th>Detalles</th>
+            <th>ID</th>
+            <th>Apellido</th>
+            <th>Oficio</th>
+            <th>Salario</th>
+            <th>Departamento</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -46,7 +36,9 @@
                 @Html.DisplayFor(modelItem => item.Departamento)
             </td>
             <td>
-                <a asp-controller="Empleados" asp-action="Details" asp-route-idempleado="@item.IdEmpleado" class="btn btn-outline-primary">Detalles</a>
+                <a asp-controller="Empleados" asp-action="Details" asp-route-idempleado="@item.IdEmpleado" class="btn btn-warning">
+                    Details
+                </a>
             </td>
         </tr>
 }
