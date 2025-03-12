@@ -20,9 +20,10 @@ namespace NetCoreSeguridadEmpleados.Controllers
             return View(empleados);
         }
 
-        public async Task<IActionResult> Details(int idempleado)
+        [AuthorizeEmpleados]
+        public async Task<IActionResult> Details(int id)
         {
-            Empleado empleado = await this.repo.FindEmpleadoAsync(idempleado);
+            Empleado empleado = await this.repo.FindEmpleadoAsync(id);
             return View(empleado);
         }
 
@@ -32,7 +33,7 @@ namespace NetCoreSeguridadEmpleados.Controllers
             return View();
         }
 
-        [AuthorizeEmpleados]
+        [AuthorizeEmpleados(Policy = "SOLOJEFES")]
         public async Task<IActionResult> Compis()
         {
             //RECUPERAMOS EL DATO DEL CLAIM DE Departamento
@@ -42,7 +43,7 @@ namespace NetCoreSeguridadEmpleados.Controllers
             return View(empleados);
         }
 
-        [AuthorizeEmpleados]
+        [AuthorizeEmpleados(Policy = "SOLOJEFES")]
         [HttpPost]
         public async Task<IActionResult> Compis(int incremento)
         {
@@ -52,6 +53,18 @@ namespace NetCoreSeguridadEmpleados.Controllers
             await this.repo.UpdateSalarioEmpleadosAsync(idDepartamento, incremento);
             List<Empleado> empleados = await this.repo.GetEmpleadosDepartamentoAsync(idDepartamento);
             return View(empleados);
+        }
+
+        [AuthorizeEmpleados(Policy ="AdminOnly")]
+        public IActionResult AdminEmpleados()
+        {
+            return View();
+        }
+
+        [AuthorizeEmpleados(Policy = "SoloRicos")]
+        public IActionResult ZonaNoble()
+        {
+            return View();
         }
     }
 }

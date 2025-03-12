@@ -34,9 +34,8 @@ namespace NetCoreSeguridadEmpleados.Controllers
                 Claim claimName = new Claim(ClaimTypes.Name, empleado.Apellido);
                 identity.AddClaim(claimName);
                 //ALMACENAMOS EL ID
-                Claim claimId = new Claim(
-                    ClaimTypes.NameIdentifier, 
-                    empleado.IdEmpleado.ToString());
+                Claim claimId = new Claim(ClaimTypes.NameIdentifier
+                    , empleado.IdEmpleado.ToString());
                 identity.AddClaim(claimId);
                 //COMO ROLE, VOY A UTILIZAR EL DATO DEL OFICIO
                 Claim claimOficio = new Claim(ClaimTypes.Role, empleado.Oficio);
@@ -45,6 +44,13 @@ namespace NetCoreSeguridadEmpleados.Controllers
                 identity.AddClaim(claimSalario);
                 Claim claimDept = new Claim("Departamento", empleado.Departamento.ToString());
                 identity.AddClaim(claimDept);
+                //INCLUIMOS UN CLAIM DE ADMIN A CUALQUIER EMPLEADO AL AZAR (ARROYO)
+                if (empleado.IdEmpleado == 7499)
+                {
+                    //CREAMOS UN CLAIM
+                    Claim claimAdmin = new Claim("Admin", "Soy el super jefe de la empresa");
+                    identity.AddClaim(claimAdmin);
+                }
 
                 ClaimsPrincipal userPrincipal = new ClaimsPrincipal(identity);
                 await HttpContext.SignInAsync(
@@ -52,7 +58,15 @@ namespace NetCoreSeguridadEmpleados.Controllers
                     userPrincipal);
                 string controller = TempData["controller"].ToString();
                 string action = TempData["action"].ToString();
-                return RedirectToAction(action, controller);
+                if (TempData["id"] != null)
+                {
+                    string id = TempData["id"].ToString();
+                    return RedirectToAction(action, controller, new { id = id });
+                }
+                else
+                {
+                    return RedirectToAction(action, controller);
+                }
             }
             else
             {

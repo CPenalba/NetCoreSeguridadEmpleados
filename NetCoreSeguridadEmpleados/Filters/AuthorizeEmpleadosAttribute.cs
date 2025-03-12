@@ -15,26 +15,26 @@ namespace NetCoreSeguridadEmpleados.Filters
             //NECESITAMOS EL CONTROLLER Y EL ACTION DE DONDE HA PULSADO EL USUARIO ANTES DE ENTRAR AQUI
             string controller = context.RouteData.Values["controller"].ToString();
             string action = context.RouteData.Values["action"].ToString();
+            var id = context.RouteData.Values["id"];
             ITempDataProvider provider = context.HttpContext.RequestServices.GetService<ITempDataProvider>();
-            //ESTA CLASE TIENE EL TEMPDATA DE NUETSRA APP
+            //ESTA CLASE TIENE EL TEMPDATA DE NUESTRA APP
             var TempData = provider.LoadTempData(context.HttpContext);
             TempData["controller"] = controller;
             TempData["action"] = action;
+            if (id != null)
+            {
+                TempData["id"] = id.ToString();
+            }
+            else
+            {
+                //ELIMINAMOS LA KEY DEL ID SI NO VIENE NADA
+                TempData.Remove("id");
+            }
             //GUARDAMOS EL TEMPDATA QUE ACABAMOS DE RECUPERAR DENTRO DE LA APLICACION
             provider.SaveTempData(context.HttpContext, TempData);
             if (user.Identity.IsAuthenticated == false)
             {
                 context.Result = this.GetRoute("Managed", "Login");
-            }
-            else
-            {
-                //COMPROBAMOS LOS ROLES DE ACCESO
-                if (user.IsInRole("PRESIDENTE") == false
-                    && user.IsInRole("DIRECTOR") == false
-                    && user.IsInRole("ANALISTA") == false)
-                {
-                    context.Result = this.GetRoute("Managed", "ErrorAcceso");
-                }
             }
         }
 
