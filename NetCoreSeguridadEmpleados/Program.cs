@@ -7,7 +7,7 @@ using NetCoreSeguridadEmpleados.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-string connectionString = builder.Configuration.GetConnectionString("SqlHospital");
+string connectionString = builder.Configuration.GetConnectionString("SqlHospitalAzure");
 builder.Services.AddTransient<RepositoryHospital>();
 builder.Services.AddDbContext<HospitalContext>(options => options.UseSqlServer(connectionString));
 
